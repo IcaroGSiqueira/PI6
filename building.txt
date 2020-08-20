@@ -1,0 +1,96 @@
+##########################################################################
+
+# Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+Uso da CPU:			 100.0 %
+Freq. da CPU:		 2935.49 Mhz
+Temp. da CPU:		 85.0 °C
+
+# GeForce GTX 1660 Ti with Max-Q Design
+Uso da GPU:			 14 %
+Freq. da GPU:		 360 Mhz
+Temp. da GPU:		 57 °C
+Uso da Mem. da GPU:	 375 MB
+
+# 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns) + 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns)
+RAM Livre:			 3785.72 MB
+RAM Usada:			 4010.26 MB
+
+# WDC WD10SPZX-75Z10T3 1,00 TB
+HDD Temp:			 39 °C
+
+# PC SN520 NVMe WDC 128GB
+SSD Temp:			 45 °C
+
+# Rede
+Uso de banda:		 0.07 Kbps
+
+# Bateria DELL M4GWP9A 51000 mWh
+Nível de Carga:		 100.0 %
+
+Wed, 19 Aug 2020 22:32:39 
+
+##########################################################################
+##########################################################################
+
+# Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+Uso da CPU:			 100.0 %
+Freq. da CPU:		 2962.3 Mhz
+Temp. da CPU:		 87.0 °C
+
+# GeForce GTX 1660 Ti with Max-Q Design
+Uso da GPU:			 12 %
+Freq. da GPU:		 300 Mhz
+Temp. da GPU:		 57 °C
+Uso da Mem. da GPU:	 376 MB
+
+# 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns) + 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns)
+RAM Livre:			 3576.83 MB
+RAM Usada:			 4219.39 MB
+
+# WDC WD10SPZX-75Z10T3 1,00 TB
+HDD Temp:			 39 °C
+
+# PC SN520 NVMe WDC 128GB
+SSD Temp:			 48 °C
+
+# Rede
+Uso de banda:		 0.0 Kbps
+
+# Bateria DELL M4GWP9A 51000 mWh
+Nível de Carga:		 100.0 %
+
+Wed, 19 Aug 2020 22:32:44 
+
+##########################################################################
+##########################################################################
+
+# Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
+Uso da CPU:			 41.7 %
+Freq. da CPU:		 4166.97 Mhz
+Temp. da CPU:		 99.0 °C
+
+# GeForce GTX 1660 Ti with Max-Q Design
+Uso da GPU:			 8 %
+Freq. da GPU:		 300 Mhz
+Temp. da GPU:		 57 °C
+Uso da Mem. da GPU:	 376 MB
+
+# 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns) + 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns)
+RAM Livre:			 5742.47 MB
+RAM Usada:			 2053.94 MB
+
+# WDC WD10SPZX-75Z10T3 1,00 TB
+HDD Temp:			 39 °C
+
+# PC SN520 NVMe WDC 128GB
+SSD Temp:			 48 °C
+
+# Rede
+Uso de banda:		 0.0 Kbps
+
+# Bateria DELL M4GWP9A 51000 mWh
+Nível de Carga:		 100.0 %
+
+Wed, 19 Aug 2020 22:32:48 
+
+##########################################################################
