@@ -172,10 +172,10 @@ while True:
 	print("RAM Usada:			", mem_used,"MB")
 
 	print("\n#", hd)
-	print("HDD Temp:			", hd_tmp, "°C")
+	print("HDD Temp.:			", hd_tmp, "°C")
 
 	print("\n#", ssd)
-	print("SSD Temp:			", ssd_tmp, "°C")
+	print("SSD Temp.:			", ssd_tmp, "°C")
 
 	print("\n# Rede")
 	print("Uso de banda:		", round(net_sts,2), "Kbps")
@@ -185,7 +185,7 @@ while True:
 
 	print(strftime("\n%a, %d %b %Y %H:%M:%S \n", localtime()))
 
-	print("##########################################################################")
+	#print("##########################################################################")
 
 	#time.sleep(sleep)
 		

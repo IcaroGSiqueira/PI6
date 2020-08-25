@@ -1,96 +1,96 @@
 ##########################################################################
 
 # Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
-Uso da CPU:			 2.3 %
-Freq. da CPU:		 2076.86 Mhz
-Temp. da CPU:		 64.0 °C
+Uso da CPU:			 51.2 %
+Freq. da CPU:		 3656.57 Mhz
+Temp. da CPU:		 97.0 °C
 
 # GeForce GTX 1660 Ti with Max-Q Design
-Uso da GPU:			 10 %
-Freq. da GPU:		 300 Mhz
-Temp. da GPU:		 48 °C
-Uso da Mem. da GPU:	 459 MB
+Uso da GPU:			 33 %
+Freq. da GPU:		 1230 Mhz
+Temp. da GPU:		 63 °C
+Uso da Mem. da GPU:	 853 MB
 
 # 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns) + 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns)
-RAM Livre:			 5129.81 MB
-RAM Usada:			 2630.88 MB
+RAM Livre:			 256.91 MB
+RAM Usada:			 7139.91 MB
 
 # WDC WD10SPZX-75Z10T3 1,00 TB
-HDD Temp:			 39 °C
+HDD Temp:			 36 °C
 
 # PC SN520 NVMe WDC 128GB
-SSD Temp:			 39 °C
+SSD Temp:			 53 °C
 
 # Rede
-Uso de banda:		 0.28 Kbps
+Uso de banda:		 1320.85 Kbps
 
 # Bateria DELL M4GWP9A 51000 mWh
 Nível de Carga:		 100.0 %
 
-Wed, 19 Aug 2020 22:29:10 
+Thu, 20 Aug 2020 06:50:29 
 
 ##########################################################################
 ##########################################################################
 
 # Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
-Uso da CPU:			 1.9 %
-Freq. da CPU:		 1319.03 Mhz
-Temp. da CPU:		 62.0 °C
+Uso da CPU:			 32.2 %
+Freq. da CPU:		 4090.72 Mhz
+Temp. da CPU:		 99.0 °C
 
 # GeForce GTX 1660 Ti with Max-Q Design
-Uso da GPU:			 9 %
-Freq. da GPU:		 300 Mhz
-Temp. da GPU:		 48 °C
-Uso da Mem. da GPU:	 459 MB
+Uso da GPU:			 26 %
+Freq. da GPU:		 870 Mhz
+Temp. da GPU:		 63 °C
+Uso da Mem. da GPU:	 845 MB
 
 # 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns) + 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns)
-RAM Livre:			 5127.98 MB
-RAM Usada:			 2632.77 MB
+RAM Livre:			 251.07 MB
+RAM Usada:			 7159.91 MB
 
 # WDC WD10SPZX-75Z10T3 1,00 TB
-HDD Temp:			 39 °C
+HDD Temp:			 36 °C
 
 # PC SN520 NVMe WDC 128GB
 SSD Temp:			 45 °C
 
 # Rede
-Uso de banda:		 0.28 Kbps
+Uso de banda:		 1280.9 Kbps
 
 # Bateria DELL M4GWP9A 51000 mWh
 Nível de Carga:		 100.0 %
 
-Wed, 19 Aug 2020 22:29:14 
+Thu, 20 Aug 2020 06:50:33 
 
 ##########################################################################
 ##########################################################################
 
 # Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz
-Uso da CPU:			 3.6 %
-Freq. da CPU:		 1315.56 Mhz
-Temp. da CPU:		 50.0 °C
+Uso da CPU:			 30.9 %
+Freq. da CPU:		 3998.4 Mhz
+Temp. da CPU:		 100.0 °C
 
 # GeForce GTX 1660 Ti with Max-Q Design
-Uso da GPU:			 13 %
-Freq. da GPU:		 300 Mhz
-Temp. da GPU:		 49 °C
-Uso da Mem. da GPU:	 459 MB
+Uso da GPU:			 25 %
+Freq. da GPU:		 1005 Mhz
+Temp. da GPU:		 63 °C
+Uso da Mem. da GPU:	 845 MB
 
 # 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns) + 4GiB SODIMM DDR4 Synchronous 2667 MHz (0,4 ns)
-RAM Livre:			 5127.7 MB
-RAM Usada:			 2632.7 MB
+RAM Livre:			 369.41 MB
+RAM Usada:			 7047.7 MB
 
 # WDC WD10SPZX-75Z10T3 1,00 TB
-HDD Temp:			 39 °C
+HDD Temp:			 36 °C
 
 # PC SN520 NVMe WDC 128GB
-SSD Temp:			 40 °C
+SSD Temp:			 45 °C
 
 # Rede
-Uso de banda:		 0.28 Kbps
+Uso de banda:		 1334.1 Kbps
 
 # Bateria DELL M4GWP9A 51000 mWh
 Nível de Carga:		 100.0 %
 
-Wed, 19 Aug 2020 22:29:17 
+Thu, 20 Aug 2020 06:50:36 
 
 ##########################################################################
