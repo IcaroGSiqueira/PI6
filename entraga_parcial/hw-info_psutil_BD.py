@@ -1,21 +1,29 @@
-import time
-from time import localtime, strftime
+#importa biblioteca para rodar comandos bash diretamente do script python
 import subprocess 
 
-import psutil #sudo apt install python3-psutil
-from pyspectator.computer import Computer
+#importa biblioteca para gerenciamento de avisos
+import warnings
+warnings.filterwarnings("ignore") #ignora avisos 
 
+#importa bibilhotecas de data e hora
+import time
+from time import localtime, strftime
+import datetime
+
+#importa biblioteca para comunicação com o banco de dados
 import mysql.connector
 from mysql.connector import Error
 
-import warnings
-warnings.filterwarnings("ignore") #ignora avisos 
+#importa bibliotecas de captura de informações do sistema
+import psutil #sudo apt install python3-psutil
+from pyspectator.computer import Computer
 
 computer = Computer()
 computer.os
 
-sleep = 1 # Intervalo em segundos de cada postagem
+sleep = 60 # Intervalo em segundos de cada postagem
 
+# Tenta iniciar conexão com o banco de dados
 try:
 	connection = mysql.connector.connect(host='localhost', database='pivi', user='icaro', password='')
 
@@ -27,23 +35,21 @@ try:
 		record = cursor.fetchone()
 		print("Você está conectado ao banco de dados: ", record)
 
+# Retorna mensagem de erro caso conexão falhe
 except Error as e:
 	print("Erro conectando ao MySQL", e)
 
 finally:
 
-	while True:
-
-		cursor = connection.cursor(prepared=True)
-
-		insert = """insert into hwInfo (cpu_uso, cpu_freq, cpu_temp, gpu_uso, gpu_freq, gpu_temp, gpu_mem, ram_livre, ram_uso, hdd_temp, ssd_temp, net_uso, dataHora)
-		values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"""
+	cont = 0
+	while cont < 60: # Numero de ciclos de leituda das informações
+		cont = cont + 1
 
 		########################### Leitura das informações ####################################
 
 		#batt = psutil.sensors_battery()
 
-		chrg = subprocess.check_output(["sudo", "dmidecode", "-t", "22"])
+		#chrg = subprocess.check_output(["sudo", "dmidecode", "-t", "22"])
 		
 		#NET
 
@@ -85,8 +91,11 @@ finally:
 		gpu_mem = subprocess.check_output(["nvidia-settings", "-q", "UsedDedicatedGPUMemory", "-t"])
 		gpu_percent = subprocess.check_output(["nvidia-settings", "-q", "GPUUtilization", "-t"])
 
+		data = strftime("%Y-%m-%d", localtime())
+		hora = strftime("%H:%M:%S", localtime())
 
-		data = strftime("%a, %d %b %Y %H:%M:%S", localtime())
+		datahora = strftime("%Y-%m-%d %H:%M:%S", localtime())
+		datahora = time.mktime(datetime.datetime.strptime(datahora,"%Y-%m-%d %H:%M:%S").timetuple())
 
 		########################## Tratamento de valores ###################################
 
@@ -112,6 +121,8 @@ finally:
 		dummy, hd_tmp = hd_tmp.split("-")
 		hd_tmp = hd_tmp.strip(" ")
 
+		hd_tmp = int(hd_tmp)
+
 		hd = hd.decode("utf-8")
 		hd = hd.split("\n")
 		hd1 = hd[4]
@@ -128,6 +139,8 @@ finally:
 		dummy, ssd_tmp = ssd_tmp.split(":")
 		ssd_tmp = ssd_tmp.strip(" Celscius")
 
+		ssd_tmp = int(ssd_tmp)
+
 		ssd = ssd.decode("utf-8")
 		ssd = ssd.split("\n")
 		ssd = ssd[4]
@@ -136,8 +149,8 @@ finally:
 
 		#RAM
 
-		mem_free = str(round(mem.available/1000000,2))
-		mem_used = str(round(mem.used/1000000,2))
+		mem_free = float(round(mem.available/1000000,2))
+		mem_used = float(round(mem.used/1000000,2))
 
 		ram = ram.decode("utf-8")
 		ram = ram.split("\n")
@@ -149,9 +162,9 @@ finally:
 
 		#CPU
 
-		cpu_percent = str(cpu_percent)
+		cpu_percent = float(cpu_percent)
 
-		cpu_freq = str(round(cpu_freq.current,2))
+		cpu_freq = float(round(cpu_freq.current,2))
 
 		names = list(cpu_temp.keys())
 		if names[2] in cpu_temp:
@@ -159,6 +172,8 @@ finally:
 				#print("%s %s°C" % (entry.label, entry.current))
 				break
 		cpu_temp = entry.current
+
+		cpu_temp = int(cpu_temp)
 
 		#GPU
 
@@ -170,22 +185,30 @@ finally:
 		gpu_temp = gpu_temp.decode("utf-8")
 		gpu_temp = gpu_temp.split("\n")
 
+		gpu_temp = int(gpu_temp[0])
+
 		gpu_freq = gpu_freq.decode("utf-8")
 		gpu_freq = gpu_freq.split("\n")
 		gpu_freq = gpu_freq[0].split(",")
 
+		gpu_freq = int(gpu_freq[0])
+
 		gpu_mem = gpu_mem.decode("utf-8")
 		gpu_mem = gpu_mem.split("\n")
+
+		gpu_mem = int(gpu_mem[0])
 
 		gpu_percent = gpu_percent.decode("utf-8") 
 		gpu_percent = gpu_percent.split("\n")
 		gpu_percent = gpu_percent[0].split(",")
 		gpu_percent = gpu_percent[0].split("=")
 
-		net_sts = str(round(net_sts,2))
+		gpu_percent = int(gpu_percent[1])
+
+		net_sts = round(net_sts,2)
 
 		##################################### Printa os valores ################################
-		print("##########################################################################")
+		print("\n##########################################################################")
 		
 		print("\n#", computer.processor.name)
 		print("Uso da CPU:			", cpu_percent, "%")
@@ -193,10 +216,10 @@ finally:
 		print("Temp. da CPU:		", cpu_temp, "°C")
 
 		print("\n#", gpu)
-		print("Uso da GPU:			", gpu_percent[1], "%")
-		print("Freq. da GPU:		", gpu_freq[0], "Mhz")
-		print("Temp. da GPU:		", gpu_temp[0], "°C")
-		print("Uso da Mem. da GPU:	", gpu_mem[0], "MB")
+		print("Uso da GPU:			", gpu_percent, "%")
+		print("Freq. da GPU:		", gpu_freq, "Mhz")
+		print("Temp. da GPU:		", gpu_temp, "°C")
+		print("Uso da Mem. da GPU:	", gpu_mem, "MB")
 
 		print("\n#", ram)
 		print("RAM Livre:			", mem_free,"MB")
@@ -214,18 +237,27 @@ finally:
 		#print("\n# Bateria", chrg)
 		#print("Nível de Carga:		", batt.percent, "%")
 
-		print(data)
+		print("\n", data, hora)
 
 		#print("##########################################################################")
 
-		#time.sleep(sleep)
+		##################################### Envia para o banco de dados ################################
 
-		cursor.execute(insert, (cpu_percent,cpu_freq,cpu_temp,gpu_percent[1],gpu_freq[0],gpu_temp[0],gpu_mem[0],mem_free,mem_used,hd_tmp,ssd_tmp,net_sts,data))
-		
+		cursor = connection.cursor(prepared=True)
+
+		insert_uso = "insert into Ocupação(CPU_Uso, GPU_Uso, GPU_MB, RAM_Livre, RAM_Usada)values(%s,%s,%s,%s,%s);"%(cpu_percent,gpu_percent,gpu_mem,mem_free,mem_used)
+
+		insert_velocidade = "insert into Performance(CPU_Mhz, GPU_Mhz, Rede_Kbps)values(%s,%s,%s);"%(cpu_freq,gpu_freq,net_sts)
+
+		insert_temperatura = "insert into Temperaturas(CPU_ºC, GPU_ºC, HDD_ºC, SSD_ºC)values(%s,%s,%s,%s);"%(cpu_temp,gpu_temp,hd_tmp,ssd_tmp)
+
+		cursor.execute(insert_uso)
+		cursor.execute(insert_velocidade)
+		cursor.execute(insert_temperatura)
 		connection.commit()
 
+		time.sleep(sleep)
 
-if (connection.is_connected()):
 	cursor.close()
 	connection.close()
 	print("MySQL connection is closed")
