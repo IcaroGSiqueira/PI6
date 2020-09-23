@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="pi6.erd">
+	<entities>
+		<data-source id="mysql8-17432bb3c16-3695c0c0b833bed6">
+			<entity id="1" name="Ocupação" fq-name="pivi.Ocupação" order="0" x="667" y="318">
+				<path name="pivi"/>
+			</entity>
+			<entity id="2" name="Performance" fq-name="pivi.Performance" order="1" x="511" y="101">
+				<path name="pivi"/>
+			</entity>
+			<entity id="3" name="Temperaturas" fq-name="pivi.Temperaturas" order="2" x="356" y="325">
+				<path name="pivi"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations>
+		<relation name="Performance_FK" fq-name="pivi.Performance.Performance_FK" type="fk" pk-ref="1" fk-ref="2"/>
+		<relation name="Temperaturas_FK" fq-name="pivi.Temperaturas.Temperaturas_FK" type="fk" pk-ref="1" fk-ref="3"/>
+		<relation name="Ocupação_FK" fq-name="pivi.Ocupação.Ocupação_FK" type="fk" pk-ref="2" fk-ref="1"/>
+		<relation name="Temperaturas_FK_1" fq-name="pivi.Temperaturas.Temperaturas_FK_1" type="fk" pk-ref="2" fk-ref="3"/>
+		<relation name="Ocupação_FK_1" fq-name="pivi.Ocupação.Ocupação_FK_1" type="fk" pk-ref="3" fk-ref="1"/>
+		<relation name="Performance_FK_1" fq-name="pivi.Performance.Performance_FK_1" type="fk" pk-ref="3" fk-ref="2"/>
+	</relations>
+</diagram>
