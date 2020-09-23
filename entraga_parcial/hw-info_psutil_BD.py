@@ -243,7 +243,7 @@ finally:
 
 		##################################### Envia para o banco de dados ################################
 
-		cursor = connection.cursor(prepared=True)
+		#cursor = connection.cursor(prepared=True)
 
 		insert_uso = "insert into Ocupação(CPU_Uso, GPU_Uso, GPU_MB, RAM_Livre, RAM_Usada)values(%s,%s,%s,%s,%s);"%(cpu_percent,gpu_percent,gpu_mem,mem_free,mem_used)
 
