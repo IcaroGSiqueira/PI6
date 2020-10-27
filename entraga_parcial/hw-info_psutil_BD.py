@@ -2,8 +2,8 @@
 import subprocess 
 
 #importa biblioteca para gerenciamento de avisos
-import warnings
-warnings.filterwarnings("ignore") #ignora avisos 
+#import warnings
+#warnings.filterwarnings("ignore") #ignora avisos 
 
 #importa bibilhotecas de data e hora
 import time
