@@ -21,7 +21,7 @@ from pyspectator.computer import Computer
 computer = Computer()
 computer.os
 
-sleep = 60 # Intervalo em segundos de cada postagem
+sleep = 6 # Intervalo em segundos de cada postagem
 
 # Tenta iniciar conexão com o banco de dados
 try:

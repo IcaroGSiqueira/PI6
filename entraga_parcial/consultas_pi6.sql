@@ -5,6 +5,13 @@ from Ocupação
 inner join  Performance on Performance.Data_Hora = Ocupação.Data_Hora 
 inner join Temperaturas on Temperaturas.Data_Hora = Performance.Data_Hora;
 
+select Ocupação.CPU_Uso, Ocupação.GPU_Uso, Ocupação.GPU_MB, Ocupação.RAM_Usada, Ocupação.RAM_Livre, 
+Performance.CPU_Mhz, Performance.GPU_Mhz, Performance.Rede_Kbps, 
+Temperaturas.CPU_ºC, Temperaturas.GPU_ºC, Temperaturas.HDD_ºC, Temperaturas.SSD_ºC, Temperaturas.Data_Hora
+from Ocupação 
+inner join  Performance on Performance.Data_Hora = Ocupação.Data_Hora 
+inner join Temperaturas on Temperaturas.Data_Hora = Performance.Data_Hora where Ocupação.Data_Hora BETWEEN "2020-09-16 17:36:00" and "2020-09-16 17:42:00";
+
 select Ocupação.CPU_Uso, Performance.CPU_Mhz, Temperaturas.CPU_ºC, Temperaturas.Data_Hora from Ocupação 
 inner join  Performance on Performance.Data_Hora = Ocupação.Data_Hora 
 inner join Temperaturas on Temperaturas.Data_Hora = Performance.Data_Hora group by Data_Hora order by Data_Hora;
