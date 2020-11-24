@@ -4,57 +4,45 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 import matplotlib.animation as animation #sudo apt install python3-tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-from pandas import DataFrame
-import numpy as np
 
-fig = plt.figure()
-ax = fig.add_subplot(1,1,1)
+global xs, ys, n, tempo, fig, ax
 
-#valores iniciais
-global xs, ys, n
+fig = plt.figure() # cria a figura
+ax = fig.add_subplot(1,1,1) # proporções da figura animada
 
 #define o maximo de pontos plotados no grafico
-n=10
-xs = [0.0]
-ys = [0.0]
-tempo = 0
+n=15
 
-def animate(i, xs, ys, coluna):
+xs = [0.0] # valore inicial de x
+ys = [0.0] # valor inicial de y
+tempo = 0 # numero de iteração inicial
 
-	if (coluna == "CPU_Uso" or coluna == "GPU_Uso" or coluna == "GPU_MB" or coluna == "RAM_Livre" or coluna == "RAM_Usada"):
-		tabela = "Ocupação"
+def animate(i, xs, ys, tabela, coluna):
 
-	elif (coluna == "CPU_Mhz" or coluna == "GPU_Mhz" or coluna == "Rede_Kbps"):
-		tabela = "Performance"
+	global tempo
 
-	elif (coluna == "CPU_ºC" or coluna == "GPU_ºC" or coluna == "HDD_ºC" or coluna == "SSD_ºC"):
-		tabela = "Temperaturas"
-	else:
-		return
+	connection = mysql.connector.connect(host='localhost', database='pivi', user='icaro', password='') # conecta no banco de dados
 
-	connection = mysql.connector.connect(host='localhost', database='pivi', user='icaro', password='')
+	cursor = connection.cursor(buffered=True) # cria o ponteiro para acessar o banco
 
-	cursor = connection.cursor(buffered=True)
-
-	cursor.execute("SELECT %s from %s "%(coluna,tabela))
+	cursor.execute("SELECT %s from %s ORDER BY Data_Hora DESC LIMIT 1 "%(coluna,tabela)) # busca o ultimo valor registrado na tabela e coluna pedida
 
 	records = cursor.fetchall()
 
-	global tempo
-	tempo = tempo + 1
+	record = str(records).strip("(),[]").split(".")[0] # trata o valor retornado do banco para transformar em um inteiro
 
-	#recebe o valor do banco
-	output = coluna
+	tempo+=1 # iteração do x
+
 	#incremento do novo valor
 	xs.append(tempo)
-	ys.append(int(output))
+	ys.append(int(record))
 
 	#mantem grafico dentro do intervalo de n plots
 	if tempo > n:
 		xs = xs[tempo-(n-1):tempo]
 		ys = ys[tempo-(n-1):tempo]
 
-	ax.clear()
+	ax.clear() # limpa plot anterior
 
 	# desenhar x e y
 	ax.plot(xs, ys)
@@ -68,6 +56,7 @@ def animate(i, xs, ys, coluna):
 
 def graf(coluna):
 
+	# encontra a tabela a ser usada de acordo com a coluna que foi pedida
 	if (coluna == "CPU_Uso" or coluna == "GPU_Uso" or coluna == "GPU_MB" or coluna == "RAM_Livre" or coluna == "RAM_Usada"):
 		tabela = "Ocupação"
 
@@ -79,13 +68,13 @@ def graf(coluna):
 	else:
 		return
 
-	connection = mysql.connector.connect(host='localhost', database='pivi', user='icaro', password='')
+	connection = mysql.connector.connect(host='localhost', database='pivi', user='icaro', password='') # conecta no banco
 
 	cursor = connection.cursor(buffered=True)
 	cursor2 = connection.cursor(buffered=True)
 
-	cursor.execute("SELECT %s from %s "%(coluna,tabela))
-	cursor2.execute("SELECT %s.Data_Hora from %s "%(tabela,tabela))
+	cursor.execute("SELECT %s from %s "%(coluna,tabela)) # busca os valores da coluna pedida
+	cursor2.execute("SELECT %s.Data_Hora from %s "%(tabela,tabela)) # busca os valores de data e hora da mesma tabela buscada
 
 	records = cursor.fetchall()
 	records2 = cursor2.fetchall()
@@ -94,8 +83,12 @@ def graf(coluna):
 	yvalues = []
 	
 	i=0
+
+	# percorre os valores de data buscados para tratar e armazenar no eixo X
 	for record2 in records2:
 		dummy0, dummy, record2 = str(record2).split("(")
+
+		# em alguns casos a data tem segundos, em outros não, por isso é necessario tentar ambas opções para cada caso
 		try:
 			record2a, record2m, record2d, record2h, record2min, record2s, dummy = record2.split(",")
 		except:
@@ -103,11 +96,12 @@ def graf(coluna):
 
 		record2a = record2a[2:]
 
+		# cria uma string com a hora e a data com um indice no inicio para manter a ordem dos valores
 		record2 = "%s - %s:%s - %s/%s/%s"%(i, record2h.strip(" "), record2min.strip(" )"), record2d.strip(" "), record2m.strip(" "), record2a.strip(" "))
 		xlabel.append(record2)
 		i+=1
 
-
+	# percorre os valores da coluna pedida para tratar e armazenar no eixo Y
 	for record in records:
 		record = str(record).strip("(,)")
 		yvalues.append(float(record))
@@ -329,46 +323,56 @@ def run_bd():
                                     stderr=subprocess.STDOUT)
 
 	if rb.get() == "1":
-		colun = "CPU Temp."
+		coluna = "CPU_ºC"
 	elif rb.get() == "2":
-		colun = "CPU Temp."
+		coluna = "CPU_Mhz"
 	elif rb.get() == "3":
-		colun = "CPU Temp."
+		coluna = "CPU_Uso"
 	elif rb.get() == "4":
-		colun = "CPU Temp."
+		coluna = "GPU_ºC"
 	elif rb.get() == "5":
-		colun = "CPU Temp."
+		coluna = "GPU_Mhz"
 	elif rb.get() == "6":
-		colun = "CPU Temp."
+		coluna = "GPU_Uso"
 	elif rb.get() == "7":
-		colun = "CPU Temp."
+		coluna = "GPU_MB"
 	elif rb.get() == "8":
-		colun = "CPU Temp."
+		coluna = "RAM_Usada"
 	elif rb.get() == "9":
-		colun = "CPU Temp."
+		coluna = "RAM_Livre"
 	elif rb.get() == "10":
-		colun = "CPU Temp."
+		coluna = "HDD_ºC"
 	elif rb.get() == "11":
-		colun = "CPU Temp."
+		coluna = "SSD_ºC"
 	elif rb.get() == "12":
-		colun = "CPU Temp."
+		coluna = "Rede_Kbps"
+	else:
+		return
+
+	if (coluna == "CPU_Uso" or coluna == "GPU_Uso" or coluna == "GPU_MB" or coluna == "RAM_Livre" or coluna == "RAM_Usada"):
+		tabela = "Ocupação"
+
+	elif (coluna == "CPU_Mhz" or coluna == "GPU_Mhz" or coluna == "Rede_Kbps"):
+		tabela = "Performance"
+
+	elif (coluna == "CPU_ºC" or coluna == "GPU_ºC" or coluna == "HDD_ºC" or coluna == "SSD_ºC"):
+		tabela = "Temperaturas"
 
 	# inicia o grafico animado de monitoramento
-	graf = FigureCanvasTkAgg(fig, aba_quadro1)
+	graf = FigureCanvasTkAgg(fig, frame_graf)
 	#graf.show()
 	graf.get_tk_widget().pack(side="left", padx=15, pady=15)
 	#graf.get_tk_widget().grid()
 
 	# inicia a barra de ferramentas do grafico
-	toolbar = NavigationToolbar2TkAgg(graf, aba_quadro1)
+	toolbar = NavigationToolbar2TkAgg(graf, frame_graf)
 	#toolbar.update()
 	graf._tkcanvas.pack(side="top", fill="x")
 	#graf._tkcanvas.grid()
 
-	ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys, colun), interval=3333)
+	ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys, tabela, coluna), interval=10250)
 
-	# altere o valor de "interval" para que que o frame seja atualizado de maneira mais rapida
-	#plt.show(aba_quadro1)
+	graf.show()
 
 def stop_bd():
 	try:
@@ -391,7 +395,7 @@ root.geometry("350x150") # tamanho da janela
 # define novas janelas
 def monit():
 
-	global rb, aba_quadro1
+	global rb, aba_quadro1, frame_graf
 
 	aba_quadro1 = Toplevel()
 
@@ -400,26 +404,30 @@ def monit():
 	aba_quadro1.geometry("800x545") # tamanho da janela
 
 	# cria quadros nas abas/janelas com para seus conteudos
-	frame_graph = Frame(aba_quadro1)
+	frame_radio = Frame(aba_quadro1)
 
-	frame_graph.pack(side="right", padx=10, anchor="e")
+	frame_graf = Frame(aba_quadro1)
+
+	frame_radio.pack(side="right", padx=10, anchor="e")
+
+	frame_graf.pack(side="left", padx=10, anchor="w")
 
 	rb = StringVar()
 
-	Radiobutton(frame_graph, text="CPU Temp."	, variable=rb, value=1, command = lambda: monitor(rb.get())).grid(column=0, row=0, sticky="w")
-	Radiobutton(frame_graph, text="CPU Freq."	, variable=rb, value=2, command = lambda: monitor(rb.get())).grid(column=0, row=1, sticky="w")
-	Radiobutton(frame_graph, text="CPU Uso"		, variable=rb, value=3, command = lambda: monitor(rb.get())).grid(column=0, row=2, sticky="w")
-	Radiobutton(frame_graph, text="GPU Temp."	, variable=rb, value=4, command = lambda: monitor(rb.get())).grid(column=0, row=3, sticky="w")
-	Radiobutton(frame_graph, text="GPU Freq."	, variable=rb, value=5, command = lambda: monitor(rb.get())).grid(column=0, row=4, sticky="w")
-	Radiobutton(frame_graph, text="GPU Uso."	, variable=rb, value=6, command = lambda: monitor(rb.get())).grid(column=0, row=6, sticky="w")
-	Radiobutton(frame_graph, text="GPU Mem."	, variable=rb, value=7, command = lambda: monitor(rb.get())).grid(column=0, row=7, sticky="w")
-	Radiobutton(frame_graph, text="RAM Uso"		, variable=rb, value=8, command = lambda: monitor(rb.get())).grid(column=0, row=8, sticky="w")
-	Radiobutton(frame_graph, text="RAM Livre"	, variable=rb, value=9, command = lambda: monitor(rb.get())).grid(column=0, row=9, sticky="w")
-	Radiobutton(frame_graph, text="HDD Temp."	, variable=rb, value=10, command = lambda: monitor(rb.get())).grid(column=0, row=10, sticky="w")
-	Radiobutton(frame_graph, text="SSD Temp."	, variable=rb, value=11, command = lambda: monitor(rb.get())).grid(column=0, row=11, sticky="w")
-	Radiobutton(frame_graph, text="Rede Uso"	, variable=rb, value=12, command = lambda: monitor(rb.get())).grid(column=0, row=12, sticky="w")
+	Radiobutton(frame_radio, text="CPU Temp."	, variable=rb, value=1).grid(column=0, row=0, sticky="w")
+	Radiobutton(frame_radio, text="CPU Freq."	, variable=rb, value=2).grid(column=0, row=1, sticky="w")
+	Radiobutton(frame_radio, text="CPU Uso"		, variable=rb, value=3).grid(column=0, row=2, sticky="w")
+	Radiobutton(frame_radio, text="GPU Temp."	, variable=rb, value=4).grid(column=0, row=3, sticky="w")
+	Radiobutton(frame_radio, text="GPU Freq."	, variable=rb, value=5).grid(column=0, row=4, sticky="w")
+	Radiobutton(frame_radio, text="GPU Uso."	, variable=rb, value=6).grid(column=0, row=6, sticky="w")
+	Radiobutton(frame_radio, text="GPU Mem."	, variable=rb, value=7).grid(column=0, row=7, sticky="w")
+	Radiobutton(frame_radio, text="RAM Uso"		, variable=rb, value=8).grid(column=0, row=8, sticky="w")
+	Radiobutton(frame_radio, text="RAM Livre"	, variable=rb, value=9).grid(column=0, row=9, sticky="w")
+	Radiobutton(frame_radio, text="HDD Temp."	, variable=rb, value=10).grid(column=0, row=10, sticky="w")
+	Radiobutton(frame_radio, text="SSD Temp."	, variable=rb, value=11).grid(column=0, row=11, sticky="w")
+	Radiobutton(frame_radio, text="Rede Uso"	, variable=rb, value=12).grid(column=0, row=12, sticky="w")
 
-	botao1 = Button(frame_graph, text="Iniciar", fg="#ffffff", bg="#404142", command=run_bd , width=5)
+	botao1 = Button(frame_radio, text="Iniciar", fg="#ffffff", bg="#404142", command=run_bd , width=5)
 	#botao1.pack(side="right", padx=20, anchor="se")
 	botao1.grid(column=0, row=13, sticky="s")
 
@@ -723,9 +731,6 @@ def scrollall(*args):
 	listbox10.yview(*args)
 	listbox11.yview(*args)
 	listbox12.yview(*args)
-
-def monitor(value):
-	label = Label(root, text=value).pack()#grid(column=0, row=15, sticky="s")
 
 # configura os botões
 botao0root = Button(root, text="QUIT", fg="#ffffff", bg="#404142", command=lambda:[stop_bd(),quit()], width=190)
