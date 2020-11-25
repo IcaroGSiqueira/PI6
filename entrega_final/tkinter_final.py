@@ -5,7 +5,9 @@ from matplotlib.figure import Figure
 import matplotlib.animation as animation #sudo apt install python3-tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 
-global xs, ys, n, tempo, fig, ax
+global xs, ys, n, tempo, fig, ax, intervalo
+
+intervalo = 4000 # tempo em milisegundos para cada plot do grafico
 
 fig = plt.figure() # cria a figura
 ax = fig.add_subplot(1,1,1) # proporções da figura animada
@@ -138,9 +140,10 @@ def quary_bd():
 
 	global data1, data2
 
-	tabs = 0
+	tabs = 0 # variavel usada para controlar quantas tabelas serão usadas na busca
 	tabela = []
 
+	# cria uma lista com quais tabelas vão ser usadas na busca
 	if (cu.get() == 1 or gu.get() == 1 or gm.get() == 1 or rl.get() == 1 or ru.get() == 1):
 		tabela.append("Ocupação")
 		tabs+=1
@@ -158,6 +161,7 @@ def quary_bd():
 
 	connection = mysql.connector.connect(host='localhost', database='pivi', user='icaro', password='')
 
+	# atribui 1 nos dados que foram escolhidos
 	ct1 = ct.get()
 	cf1 = cf.get()
 	cu1 = cu.get()
@@ -173,6 +177,7 @@ def quary_bd():
 
 	linha = ""
 
+	# cria uma string com os valores a serem buscados
 	if cu1 == 1:
 		linha = linha + "CPU_Uso,"
 
@@ -217,6 +222,7 @@ def quary_bd():
 
 	cursor = connection.cursor()
 
+	# seleciona qual linha de busca vai ser usada de acordo com a quantidade de tabelas
 	if tabs == 3:
 		quary = ("SELECT %s from %s inner join  %s on %s.Data_Hora = %s.Data_Hora inner join %s on %s.Data_Hora = %s.Data_Hora"%(linha,tabela[0],tabela[1],tabela[1],tabela[0],tabela[2],tabela[2],tabela[1]))
 	
@@ -226,21 +232,17 @@ def quary_bd():
 	elif tabs == 1:
 		quary = ("SELECT %s from %s"%(linha,tabela[0]))
 
+	# verifica se datas foram passadas na busca
 	if (len(data1.get()) != 0 and len(data2.get()) != 0):
 		hora1,datah1 = data1.get().split(" ")
 		hora1,min1,seg1 = hora1.split(":")
 		dia1,mes1,ano1 = datah1.split("/")
 		datahora1 = "%s-%s-%s %s:%s:%s"%(ano1,mes1,dia1,hora1,min1,seg1)
 
-		#datahora1 = time.mktime(datetime.datetime.strptime(datahora1,"%Y-%m-%d %H:%M:%S").timetuple())
-
 		hora2,datah2 = data2.get().split(" ")
 		hora2,min2,seg2 = hora2.split(":")
 		dia2,mes2,ano2 = datah2.split("/")
-
 		datahora2 = "%s-%s-%s %s:%s:%s"%(ano2,mes2,dia2,hora2,min2,seg2)
-
-		#datahora2 = time.mktime(datetime.datetime.strptime(datahora2,"%Y-%m-%d %H:%M:%S").timetuple())
 
 		quary = quary + " where %s.Data_Hora between \"%s\" and \"%s\""%(tabela[0], datahora1, datahora2)
 
@@ -370,7 +372,7 @@ def run_bd():
 	graf._tkcanvas.pack(side="top", fill="x")
 	#graf._tkcanvas.grid()
 
-	ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys, tabela, coluna), interval=10250)
+	ani = animation.FuncAnimation(fig, animate, fargs=(xs, ys, tabela, coluna), interval=intervalo)
 
 	graf.show()
 
@@ -634,6 +636,7 @@ def select_graf():
 
 	list0,list1,list2,list3,list4,list5,list6,list7,list8,list9,list10,list11 = "","","","","","","","","","","",""
 
+	# atribui o valor da coluna selecionada em variaveis
 	list0 = listbox0.get("anchor")
 	#listbox0 = Listbox(exportselection=0)
 	list1 = listbox1.get("anchor")
@@ -658,6 +661,7 @@ def select_graf():
 
 	list11 = listbox11.get("anchor")
 
+	# testa qual variavel não está nula e envia a coluna correspondente para a função do grafico
 	if list0 != "":
 		graf("CPU_Uso")
 
@@ -702,6 +706,7 @@ def list_insert(nums):
 
 	global listbox0,listbox1,listbox2,listbox3,listbox4,listbox5,listbox6,listbox7,listbox8,listbox9,listbox10,listbox11,listbox12
 
+	# insere os valores recebidos em cada uma das listas, o parametro "0" faz com que os valores sejam inseridos no inicio
 	listbox0.insert("0", bd0)
 	listbox1.insert("0", bd1)
 	listbox2.insert("0", bd2)
@@ -717,7 +722,7 @@ def list_insert(nums):
 	listbox12.insert("0", bd12)
 
 # função que permite rolar todas colunas ao mesmo tempo
-def scrollall(*args):
+def scrollall(*args): # envia o mesmo valor de scroll no eixo y para todas as listas
 	listbox0.yview(*args)
 	listbox1.yview(*args)
 	listbox2.yview(*args)

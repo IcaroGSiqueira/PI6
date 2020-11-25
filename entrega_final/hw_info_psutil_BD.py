@@ -21,7 +21,8 @@ from pyspectator.computer import Computer
 computer = Computer()
 computer.os
 
-sleep = 6 # Intervalo em segundos de cada postagem
+sleep = 0 # Intervalo em segundos de cada postagem
+monit_limit = 120
 
 # Tenta iniciar conexão com o banco de dados
 try:
@@ -42,7 +43,7 @@ except Error as e:
 finally:
 
 	cont = 0
-	while cont < 60: # Numero de ciclos de leituda das informações
+	while cont < monit_limit: # Numero de ciclos de leituda das informações
 		cont = cont + 1
 
 		########################### Leitura das informações ####################################
