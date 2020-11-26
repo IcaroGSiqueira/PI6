@@ -138,7 +138,19 @@ import datetime
 
 def quary_bd():
 
-	global data1, data2
+	listbox0.delete(0, END)
+	listbox1.delete(0, END)
+	listbox2.delete(0, END)
+	listbox3.delete(0, END)
+	listbox4.delete(0, END)
+	listbox5.delete(0, END)
+	listbox6.delete(0, END)
+	listbox7.delete(0, END)
+	listbox8.delete(0, END)
+	listbox9.delete(0, END)
+	listbox10.delete(0, END)
+	listbox11.delete(0, END)
+	listbox12.delete(0, END)
 
 	tabs = 0 # variavel usada para controlar quantas tabelas serão usadas na busca
 	tabela = []
@@ -232,6 +244,7 @@ def quary_bd():
 	elif tabs == 1:
 		quary = ("SELECT %s from %s"%(linha,tabela[0]))
 
+	dat = 0
 	# verifica se datas foram passadas na busca
 	if (len(data1.get()) != 0 and len(data2.get()) != 0):
 		hora1,datah1 = data1.get().split(" ")
@@ -244,7 +257,55 @@ def quary_bd():
 		dia2,mes2,ano2 = datah2.split("/")
 		datahora2 = "%s-%s-%s %s:%s:%s"%(ano2,mes2,dia2,hora2,min2,seg2)
 
-		quary = quary + " where %s.Data_Hora between \"%s\" and \"%s\""%(tabela[0], datahora1, datahora2)
+		quary = quary + " where (%s.Data_Hora between \"%s\" and \"%s\")"%(tabela[0], datahora1, datahora2)
+		dat = 1
+
+	elif (len(data1.get()) != 0):
+		hora1,datah1 = data1.get().split(" ")
+		hora1,min1,seg1 = hora1.split(":")
+		dia1,mes1,ano1 = datah1.split("/")
+		datahora1 = "%s-%s-%s %s:%s:%s"%(ano1,mes1,dia1,hora1,min1,seg1)
+
+		quary = quary + " where (%s.Data_Hora > \"%s\")"%(tabela[0], datahora1)
+		dat = 1
+
+	elif (len(data2.get()) != 0):
+		hora2,datah2 = data2.get().split(" ")
+		hora2,min2,seg2 = hora2.split(":")
+		dia2,mes2,ano2 = datah2.split("/")
+		datahora2 = "%s-%s-%s %s:%s:%s"%(ano2,mes2,dia2,hora2,min2,seg2)
+
+		quary = quary + " where (%s.Data_Hora < \"%s\")"%(tabela[0], datahora2)
+		dat = 1
+
+	# verifica se valores de minimo e/ou maximo foram passados na busca
+	if (len(rangein.get()) != 0 and len(rangeend.get()) != 0):
+		dmax = rangein.get()
+
+		dmin = rangeend.get()
+
+		if dat == 0:
+			quary = quary + " where (%s between \"%s\" and \"%s\")"%(col.get(), dmax, dmin)
+		else:
+			quary = quary.strip(")") + " and %s between \"%s\" and \"%s\")"%(col.get(), dmax, dmin)
+
+	elif (len(rangein.get()) != 0):
+		dmax = rangein.get()
+
+		if dat == 0:
+			quary = quary + " where (%s >= \"%s\") order by %s desc "%(col.get(), dmax, col.get())
+		else:
+			quary = quary.strip(")") + " and %s >= \"%s\") order by %s desc "%(col.get(), dmax, col.get())
+
+	elif (len(rangeend.get()) != 0):
+		dmin = rangeend.get()
+
+		if dat == 0:
+			quary = quary + " where (%s <= \"%s\") order by %s "%(col.get(), dmin, col.get())
+		else:
+			quary = quary.strip(")") + " and %s <= \"%s\") order by %s "%(col.get(), dmin, col.get())
+
+	print(quary)
 
 	cursor.execute("%s"%quary)
 
@@ -436,17 +497,17 @@ def monit():
 def tabel():
 	global ct,cf,cu,gt,gf,gu,gm,ru,rl,ht,st,wu
 	global listbox0,listbox1,listbox2,listbox3,listbox4,listbox5,listbox6,listbox7,listbox8,listbox9,listbox10,listbox11,listbox12
-	global data1, data2
+	global data1, data2, rangein, rangeend, col
 
 	aba_quadro2 = Toplevel()
 
 	aba_quadro2.title("Tabela de Busca no Banco de Dados") # titulo da janela
 	#root.iconbitmap("~/sexto_semestre/PI6/test/test.ico")
-	aba_quadro2.geometry("808x616") # tamanho da janela
+	aba_quadro2.geometry("825x666") # tamanho da janela
 
 	frame_lists = Frame(aba_quadro2)
 
-	frame_lists.grid(column=0, columnspan=1, ipadx=0, ipady=0, padx=5, pady=5, row=0, rowspan=1, sticky="n")
+	frame_lists.grid(column=0, columnspan=1, ipadx=0, ipady=0, padx=0, pady=5, row=0, rowspan=1, sticky="n")
 
 	# adiciona barra de rolagem a lista
 	scrolly = Scrollbar(frame_lists, orient="vertical")
@@ -623,6 +684,43 @@ def tabel():
 	data1_label = Label(aba_quadro2, text="Data de Inicio").grid(column=0, row=2, pady=0, padx=275, sticky="e")
 
 	data2_label = Label(aba_quadro2, text="Data Final").grid(column=0, row=3, pady=0, padx=275, sticky="e")
+
+	col = StringVar()
+
+	cols = ["Escolha a Coluna",
+	"CPU_Uso",
+	"GPU_Uso",
+	"GPU_MB",
+	"RAM_Livre",
+	"RAM_Usada",
+	"CPU_Mhz",
+	"GPU_Mhz",
+	"Rede_Kbps",
+	"CPU_ºC",
+	"GPU_ºC",
+	"HDD_ºC",
+	"SSD_ºC"]
+
+	col.set(cols[0])
+
+	dado = ttk.OptionMenu(aba_quadro2, col, *cols)
+
+	dado.grid(column=0, row=5, pady=0, padx=5, sticky="w")
+	dado.config(width = 14)
+
+	#colsel_label = Label(aba_quadro2, text=col.get()).grid(column=0, row=4, pady=0, padx=0, sticky="w")
+
+	rangein, rangeend = 0,0
+
+	rangein = Entry(aba_quadro2, width=20)
+	rangein.grid(column=0, row=5, pady=0, padx=166, sticky="w")
+
+	rangeend = Entry(aba_quadro2, width=20)
+	rangeend.grid(column=0, row=5, pady=0, padx=336, sticky="w")
+
+	rangein_label = Label(aba_quadro2, text="Dado Min.").grid(column=0, row=4, pady=0, padx=166, sticky="w")
+
+	rangeend_label = Label(aba_quadro2, text="Dado Max").grid(column=0, row=4, pady=0, padx=336, sticky="w")
 
 	botao2 = Button(aba_quadro2, text="Busca", fg="#ffffff", bg="#404142", command=quary_bd, width=5)
 	botao2.grid(column=0, row=1, pady=0, padx=20, sticky="e")
